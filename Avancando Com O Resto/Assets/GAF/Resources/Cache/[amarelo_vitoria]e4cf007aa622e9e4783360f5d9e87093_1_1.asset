@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f0b625614a406468ee087f147489e7, type: 3}
+  m_Name: '[amarelo_vitoria]e4cf007aa622e9e4783360f5d9e87093_1_1'
+  m_EditorClassIdentifier: 
+  m_Asset: {fileID: 11400000, guid: e4cf007aa622e9e4783360f5d9e87093, type: 2}
+  m_Scale: 1
+  m_CSF: 1
+  m_CurrentDataPath: Assets/_Art/SWF/amarelo_vitoria/
+  m_Data:
+  - m_SearchName: amarelo_vitoria
+    m_SharedTexture: {fileID: 2800000, guid: 6f5475d7595b0e140be2664d55bad432, type: 3}
+    m_SharedMaterial: {fileID: 2100000, guid: af9a3857a5bbef44287e2d30f0d2b0b3, type: 2}
