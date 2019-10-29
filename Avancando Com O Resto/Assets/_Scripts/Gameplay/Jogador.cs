@@ -20,6 +20,7 @@ public class Jogador : MonoBehaviour
     //Variáveis do movimento
     private float velocidade = 100;
     private bool podeMover;
+    private bool fim;
 
     //Variáveis dos sprites
     [SerializeField] private GameObject spritePivot;
@@ -104,7 +105,8 @@ public class Jogador : MonoBehaviour
                     TocaAnimacaoVitoria();
                     StartCoroutine(gameCore.ChamaFim(isPC, nome, jogadorIndice));
                     podeMover = false;
-                    AudioPlayer.instance.StopLoopSFX();
+                    fim = true;
+                    AudioPlayer.instance.StopLoopSFX();                      
                 }
 
                 if (casasAndar > 0)
@@ -121,10 +123,13 @@ public class Jogador : MonoBehaviour
                     }
                     else
                     {
-                        //Chama próximo jogador
-                        StartCoroutine(gameCore.ProximoJogador());                        
-                        podeMover = false;
-                        AudioPlayer.instance.StopLoopSFX();
+                        if (!fim)
+                        {
+                            //Chama próximo jogador
+                            StartCoroutine(gameCore.ProximoJogador());
+                            podeMover = false;
+                            AudioPlayer.instance.StopLoopSFX();
+                        }
                     }                                        
                 }
             }
@@ -134,6 +139,7 @@ public class Jogador : MonoBehaviour
     public void ResetaPersonagem()
     {
         transform.localPosition = posInicial;
+        indice = 0;
         sortingLayer = 1;
         paradoClip.settings.spriteLayerName = string.Format("Level{0}", sortingLayer);
         correndoClip.settings.spriteLayerName = string.Format("Level{0}", sortingLayer);

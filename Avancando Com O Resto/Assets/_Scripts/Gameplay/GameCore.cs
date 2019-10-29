@@ -5,13 +5,13 @@ using TMPro;
 
 public class GameCore : MonoBehaviour
 {
-    //Variáveis dos jogadores
+    [Header("Variáveis dos jogadores")]
     [SerializeField] private GameObject[] jogadoresAnimacao;
     [SerializeField] private Jogador[] jogadoresPile;
     [SerializeField] private List<Jogador> jogadores;
     private int jogadorIndice = -1;
 
-    //Variáveis dos dados
+    [Header("Variáveis dos dados")]
     [SerializeField] private GameObject dadoJanela;
     [SerializeField] private Dado dado;
     [SerializeField] private GameObject botaoDado;
@@ -19,30 +19,31 @@ public class GameCore : MonoBehaviour
     private int tempResultado;
     private int quantidadeDados = 0;
 
-    //Variáveis dos restos
+    [Header("Variáveis dos restos")]
     [SerializeField] private TMP_InputField inputResto;
     private int resultadoResto;
 
-    //Variáveis da pergunta
+    [Header("Variáveis da pergunta")]
     [SerializeField] private TextMeshProUGUI valor1, valor2;
     [SerializeField] private GameObject perguntaJanela;
     [SerializeField] private Animator perguntaJanelaAnimator;
     [SerializeField] private GameObject perguntaOKBotao;
     [SerializeField] private PerguntaBotao perguntaBotaoCheck;
+    [SerializeField] public bool podeCalcular;
 
-    //Variáveis da pedra
+    [Header("Variáveis da pedra")]
     [SerializeField] private GameObject pedraApagada;
     [SerializeField] private GameObject pedraVerdadeira;
 
-    //Variáveis da névoa negra
+    [Header("Variáveis da névoa negra")]
     public Animator animator;
     public int levelReached = 1;
 
-    //Variáveis da apresentação do jogador
+    [Header("Variáveis da apresentação do jogador")]
     [SerializeField] private GameObject vezDoJogador;
     [SerializeField] private TextMeshProUGUI nomeDoJogador;
 
-    //Variáveis do final
+    [Header("Variáveis do final")]
     [SerializeField] private GameObject telaFinal;
     [SerializeField] private GameObject telaVitoria;
     [SerializeField] private GameObject telaDerrota;
@@ -50,8 +51,9 @@ public class GameCore : MonoBehaviour
 
     //Random
     private System.Random random = new System.Random();
+    private int randomCPU;
 
-    //Variável dos sons
+    [Header("Variável dos sons")]
     [SerializeField] private AudioClip vezJogadorSFX;
     [SerializeField] private AudioClip dadoSFX;
     [SerializeField] private AudioClip pergaminhoSFX;
@@ -60,9 +62,7 @@ public class GameCore : MonoBehaviour
     [SerializeField] private AudioClip pedraSFX;
     [SerializeField] private AudioClip cristalSFX;
     [SerializeField] private AudioClip vitoriaBGM;
-    [SerializeField] private AudioClip derrotaBGM;
-
-    private int randomCPU;
+    [SerializeField] private AudioClip derrotaBGM;    
 
     private void Start()
     {        
@@ -218,6 +218,7 @@ public class GameCore : MonoBehaviour
         if (quantidadeDados <= 0)
         {
             //Muda os valores da pergunta e abre caixa pro jogador colocar o resultado
+            perguntaOKBotao.SetActive(false);
             inputResto.interactable = true;
             perguntaBotaoCheck.podeChecar = true;
             valor1.text = jogadores[jogadorIndice].GetCasa().valor.ToString("00");
@@ -250,22 +251,25 @@ public class GameCore : MonoBehaviour
 
     public void CalculaResultado()
     {
-        perguntaJanelaAnimator.Play("pergaminho_sai");
-        AudioPlayer.instance.PlaySFX(pergaminhoSFX);
-
-        resultadoResto = jogadores[jogadorIndice].GetCasa().valor % resultadoDado;
-        if (resultadoResto == int.Parse(inputResto.text))
+        if (podeCalcular)
         {
-            StartCoroutine(Acerto());
+            perguntaJanelaAnimator.Play("pergaminho_sai");
+            AudioPlayer.instance.PlaySFX(pergaminhoSFX);            
+            resultadoResto = jogadores[jogadorIndice].GetCasa().valor % resultadoDado;
+            if (resultadoResto == int.Parse(inputResto.text))
+            {
+                StartCoroutine(Acerto());
+            }
+            else
+            {
+                StartCoroutine(Erro());
+            }
+            //Reinicia os valores dos dados para a próxima jogada
+            resultadoDado = 0;
+            quantidadeDados = 0;
+            botaoDado.SetActive(true);
+            podeCalcular = true;
         }
-        else
-        {
-            StartCoroutine(Erro());
-        }
-        //Reinicia os valores dos dados para a próxima jogada
-        resultadoDado = 0;
-        quantidadeDados = 0;
-        botaoDado.SetActive(true);
     }
 
     private IEnumerator Acerto()
@@ -343,5 +347,10 @@ public class GameCore : MonoBehaviour
             AudioPlayer.instance.PlayBGM(derrotaBGM);
             telaDerrota.SetActive(true);
         }
+    }
+
+    public Jogador GetJogador()
+    {
+        return jogadores[jogadorIndice];
     }
 }
